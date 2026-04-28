@@ -8,3 +8,5 @@ httpx
 sqlalchemy
 psycopg2-binary
 alembic
+streamlit
+firebase-admin
