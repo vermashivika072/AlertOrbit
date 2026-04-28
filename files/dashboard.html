@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — CrisisAlert Staff</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/emergency-system.css" />
+</head>
+<body class="dash-body">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar" role="navigation" aria-label="Dashboard navigation">
+  <div class="sb-header">
+    <a class="logo logo--sm" data-dashboard-home href="dashboard.html?view=overview" aria-label="Go to Dashboard">
+  <img class="logo-image" src="media/AlertOrbit.png" alt="AlertOrbit" />
+      <span class="logo-text">Alert<strong>Orbit</strong></span>
+    </a>
+    <button class="sb-close" id="sbClose" aria-label="Close sidebar" onclick="toggleSidebar()" hidden>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <nav class="sb-nav">
+    <a class="sb-link sb-link--active" data-view="overview" href="#" onclick="switchView('overview',this)" aria-current="page">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Overview
+    </a>
+    <a class="sb-link" data-view="alerts" href="#" onclick="switchView('alerts',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Alert History
+      <span class="sb-badge" id="sbAlertBadge">0</span>
+    </a>
+    <a class="sb-link" data-view="voice" href="#" onclick="switchView('voice',this)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      Voice Logs
+    </a>
+    <a class="sb-link" href="navigation.html">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h3"/><path d="M18 12h3"/><path d="M12 3v3"/><path d="M12 18v3"/><path d="M7.5 7.5l2.5 2.5"/><path d="M14 14l2.5 2.5"/></svg>
+      Navigation
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user" id="sbUser">
+      <div class="sb-avatar" id="sbAvatar">—</div>
+      <div class="sb-userinfo">
+        <span class="sb-uname" id="sbUname">Loading…</span>
+        <span class="sb-urole" id="sbUrole">Staff</span>
+      </div>
+    </div>
+    <button class="sb-logout" onclick="logout()" aria-label="Sign out">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ MAIN AREA ═══ -->
+<div class="dash-main">
+
+  <!-- Top bar -->
+  <header class="dash-topbar" role="banner">
+    <button class="topbar-menu" id="menuBtn" aria-label="Open navigation menu" onclick="toggleSidebar()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar-brand" data-dashboard-home href="dashboard.html?view=overview" aria-label="Go to Dashboard">
+      <img class="logo-image logo-image--topbar" src="media/AlertOrbit.png" alt="AlertOrbit" />
+      <span class="topbar-brand__text">AlertOrbit</span>
+    </a>
+    <h1 class="topbar-title" id="topbarTitle">Overview</h1>
+    <div class="topbar-right">
+      <div class="live-indicator" aria-label="Live monitoring active">
+        <span class="li-dot"></span>LIVE
+      </div>
+      <a class="topbar-utility" data-topbar-view="alerts" href="dashboard.html?view=alerts" onclick="return switchView('alerts')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>Alert History</span>
+      </a>
+      <a class="topbar-utility" data-topbar-view="voice" href="dashboard.html?view=voice" onclick="return switchView('voice')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <span>Voice Logs</span>
+      </a>
+      <button class="topbar-bell" id="topbarBell" aria-label="Notifications" onclick="toggleNotifPanel()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="bell-count" id="bellCount" hidden>0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notification slide-panel -->
+  <div class="notif-panel" id="notifPanel" hidden role="complementary" aria-label="Notifications">
+    <div class="np-header">
+      <span>Notifications</span>
+      <button onclick="clearNotifs()" class="np-clear">Clear all</button>
+    </div>
+    <div class="np-list" id="npList">
+      <p class="np-empty">No notifications yet.</p>
+    </div>
+  </div>
+
+  <!-- ──── VIEWS ──── -->
+  <div class="dash-content" id="dashContent">
+
+    <!-- OVERVIEW -->
+    <section class="view" id="viewOverview" aria-label="Overview dashboard">
+      <div class="metrics-grid">
+        <div class="metric-card metric-card--red">
+          <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="mc-body">
+            <span class="mc-val" id="metActive">0</span>
+            <span class="mc-label">Active Alerts</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="mc-body">
+            <span class="mc-val" id="metToday">0</span>
+            <span class="mc-label">Alerts Today</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.64 19 19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42A2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="mc-body">
+            <span class="mc-val" id="metResolved">0</span>
+            <span class="mc-label">Resolved</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
+          <div class="mc-body">
+            <span class="mc-val" id="metVoice">0</span>
+            <span class="mc-label">Voice Logs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live feed -->
+      <div class="section-card">
+        <div class="sc-head">
+          <h2 class="sc-title">Live Alert Feed</h2>
+          <span class="sc-live-dot"></span>
+        </div>
+        <div class="alert-feed" id="overviewFeed" aria-live="polite" aria-label="Live alert feed">
+          <p class="feed-empty">No alerts yet. Monitoring…</p>
+        </div>
+      </div>
+
+      <!-- Type breakdown -->
+      <div class="section-card">
+        <h2 class="sc-title">Alert Types</h2>
+        <div class="type-chart" id="typeChart" aria-label="Alert type breakdown"></div>
+      </div>
+    </section>
+
+    <!-- ALERT HISTORY -->
+    <section class="view" id="viewAlerts" hidden aria-label="Alert history">
+      <div class="view-toolbar">
+        <div class="vt-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="alertSearch" class="vt-input" placeholder="Search alerts, rooms, teams, or reporters..." oninput="filterAlerts()" aria-label="Search alert history" />
+        </div>
+        <select class="vt-filter" id="alertFilter" onchange="filterAlerts()" aria-label="Filter by type">
+          <option value="">All Types</option>
+          <option value="Fire">Fire</option>
+          <option value="Gas Leak">Gas Leak</option>
+          <option value="Smoke Detection">Smoke Detection</option>
+          <option value="Medical Emergency">Medical Emergency</option>
+          <option value="Security Threat">Security Threat</option>
+          <option value="Electrical Failure">Electrical Failure</option>
+        </select>
+        <select class="vt-filter" id="alertStatus" onchange="filterAlerts()" aria-label="Filter by status">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Investigating">Investigating</option>
+          <option value="Escalated">Escalated</option>
+          <option value="Evacuating">Evacuating</option>
+          <option value="Resolved">Resolved</option>
+          <option value="False Alarm">False Alarm</option>
+        </select>
+        <select class="vt-filter" id="alertSeverity" onchange="filterAlerts()" aria-label="Filter by severity">
+          <option value="">All Severity</option>
+          <option value="Critical">Critical</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <select class="vt-filter" id="alertSort" onchange="filterAlerts()" aria-label="Sort alert history">
+          <option value="createdAt:desc">Newest First</option>
+          <option value="createdAt:asc">Oldest First</option>
+          <option value="severity:desc">Severity: Highest</option>
+          <option value="severity:asc">Severity: Lowest</option>
+          <option value="status:asc">Status</option>
+          <option value="roomNumber:asc">Room Number</option>
+        </select>
+        <button class="vt-btn" onclick="exportAlerts()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+      </div>
+      <div class="alert-history-summary">
+        <div class="alert-history-summary__copy">
+          <strong>Response Archive</strong>
+          <span id="alertHistoryMeta">Tracking live incidents, resolved cases, and evacuation readiness.</span>
+        </div>
+        <div class="alert-history-summary__badges">
+          <span class="history-pill history-pill--cyan" id="alertSummaryOpen">0 open</span>
+          <span class="history-pill history-pill--amber" id="alertSummaryCritical">0 critical</span>
+          <span class="history-pill history-pill--blue" id="alertSummaryFloors">0 floors impacted</span>
+        </div>
+      </div>
+      <div class="alert-table-wrap" role="region" aria-label="Alert history table">
+        <table class="alert-table" id="alertTable" aria-label="Alert history">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Date / Time</th>
+              <th scope="col">Crisis Type</th>
+              <th scope="col">Severity</th>
+              <th scope="col">Room</th>
+              <th scope="col">Floor</th>
+              <th scope="col">Status</th>
+              <th scope="col">Response Team</th>
+              <th scope="col">Evacuation</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="alertTableBody">
+            <tr><td colspan="10" class="table-empty">No alerts recorded yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert-pagination" id="alertPagination"></div>
+    </section>
+
+    <!-- VOICE LOGS -->
+    <section class="view" id="viewVoice" hidden aria-label="Voice transcript logs">
+      <div class="view-toolbar">
+        <div class="vt-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="voiceSearch" class="vt-input" placeholder="Search transcripts…" oninput="filterVoiceLogs()" aria-label="Search voice logs" />
+        </div>
+      </div>
+      <div class="voice-log-list" id="voiceLogList" aria-live="polite" aria-label="Voice log entries">
+        <p class="feed-empty">No voice logs recorded yet.</p>
+      </div>
+    </section>
+
+  </div><!-- /dash-content -->
+</div><!-- /dash-main -->
+
+<!-- Alert Detail Modal -->
+<div class="modal-overlay" id="alertDetailModal" hidden role="dialog" aria-modal="true" aria-label="Alert details">
+  <div class="modal modal--xl alert-detail-modal">
+    <div class="modal-head alert-detail-modal__head">
+      <div>
+        <p class="alert-modal-kicker">Incident Intelligence</p>
+        <h2 class="modal-title" id="alertDetailTitle">Alert Detail</h2>
+      </div>
+      <button class="modal-close" onclick="closeAlertDetailModal()" aria-label="Close modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="alert-detail-shell" id="alertDetailBody">
+      <p class="feed-empty">Select an alert to inspect the full incident trail.</p>
+    </div>
+    <div class="alert-detail-modal__footer" id="alertDetailFooter">
+      <button type="button" class="btn-cancel" onclick="closeAlertDetailModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Push notification permission banner -->
+<div class="push-banner" id="pushBanner" hidden role="alert">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+  <span>Enable push notifications to receive real-time SOS alerts</span>
+  <button onclick="requestPushPermission()" class="pb-allow">Allow</button>
+  <button onclick="dismissPushBanner()" class="pb-dismiss" aria-label="Dismiss">✕</button>
+</div>
+<script src="js/config.js?v=20260428-roomfix"></script>
+<script src="js/db.js?v=20260428-roomfix"></script>
+<script src="js/app-shell.js?v=20260428-roomfix"></script>
+<script src="js/auth.js?v=20260428-roomfix"></script>
+<script src="js/dashboard.js?v=20260428-roomfix"></script>
+<script src="js/notifications.js?v=20260428-roomfix"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlertOrbit Emergency Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/emergency-system.css" />
+  <link rel="stylesheet" href="../css/emergency-control.css" />
+</head>
+<body class="ec-body">
+  <div class="ec-shell">
+    <header class="ec-topbar">
+      <div class="ec-brand">
+        <h1>Emergency Control & Response</h1>
+        <p>Protected multilingual command center for live hotel alerts, indoor navigation administration, and future-ready venue-scale emergency broadcasting.</p>
+      </div>
+      <div class="ec-topbar__actions">
+        <span class="ec-pill" id="ecLiveStatus">No Active Emergency</span>
+        <a class="ec-link-btn" href="../dashboard.html">Back to Dashboard</a>
+        <button class="ec-logout" type="button" onclick="logout()">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="ec-grid">
+      <main class="ec-main-stack">
+        <section class="ec-card">
+          <div class="ec-card__body">
+            <div class="ec-status-banner">
+              <div>
+                <div class="ec-status-banner__badge">
+                  <span class="ec-status-banner__dot"></span>
+                  LIVE EMERGENCY BROADCAST
+                </div>
+                <h2 id="ecActiveHeadline">System standing by</h2>
+                <p id="ecActiveSummary">No active emergency is being broadcast right now. Staff can prepare a multilingual alert and publish it instantly across the property.</p>
+              </div>
+              <div class="ec-status-stats">
+                <article class="ec-stat">
+                  <span>Current Status</span>
+                  <strong id="ecStatStatus">CLEAR</strong>
+                </article>
+                <article class="ec-stat">
+                  <span>Severity</span>
+                  <strong id="ecStatSeverity">-</strong>
+                </article>
+                <article class="ec-stat">
+                  <span>Location</span>
+                  <strong id="ecStatLocation">-</strong>
+                </article>
+                <article class="ec-stat">
+                  <span>Last Update</span>
+                  <strong id="ecStatUpdated">-</strong>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="ec-card">
+          <div class="ec-card__head">
+            <div>
+              <h2>Emergency Trigger Panel</h2>
+              <p>Broadcast a structured multilingual emergency alert, update route guidance, or terminate the alert if you are the initiator or an authorized controller.</p>
+            </div>
+          </div>
+          <div class="ec-card__body">
+            <form id="ecAlertForm">
+              <div class="ec-form-grid">
+                <div class="ec-field">
+                  <label for="ecEmergencyType">Emergency Type</label>
+                  <select id="ecEmergencyType" class="ec-select"></select>
+                </div>
+                <div class="ec-field">
+                  <label for="ecSeverity">Severity</label>
+                  <select id="ecSeverity" class="ec-select">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high" selected>High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </div>
+                <div class="ec-field">
+                  <label for="ecRoom">Room</label>
+                  <input id="ecRoom" class="ec-input" type="text" placeholder="302" />
+                </div>
+                <div class="ec-field">
+                  <label for="ecLocation">Location / Floor</label>
+                  <input id="ecLocation" class="ec-input" type="text" placeholder="Floor 3 - East Wing" />
+                </div>
+                <div class="ec-field">
+                  <label for="ecAffectedZones">Affected Zones</label>
+                  <input id="ecAffectedZones" class="ec-input" type="text" placeholder="East Wing, Floor 3" />
+                </div>
+              </div>
+              <div class="ec-form-grid ec-form-grid--single">
+                <div class="ec-field">
+                  <label for="ecInstructions">Safety Instructions</label>
+                  <textarea id="ecInstructions" class="ec-textarea" placeholder="Enter safety instructions for staff and guests."></textarea>
+                </div>
+              </div>
+              <div class="ec-chip-row" id="ecRouteSummary">
+                <span class="ec-chip">Nearest safe exit: Exit B</span>
+                <span class="ec-chip">Primary route: Stairwell C</span>
+                <span class="ec-chip">Language pack: EN / HI / AR / ZH / FR</span>
+              </div>
+              <div class="ec-button-row">
+                <button class="ec-btn ec-btn--primary" type="submit">Activate Emergency</button>
+                <button class="ec-btn ec-btn--secondary" id="ecUpdateBtn" type="button">Update Emergency</button>
+                <button class="ec-btn ec-btn--neutral" id="ecCancelBtn" type="button">Abort Emergency</button>
+                <button class="ec-btn ec-btn--ghost" id="ecRefreshPreviewBtn" type="button">Refresh Multilingual Preview</button>
+              </div>
+              <p class="ec-inline-note">Secure API note: translation and broadcast requests go through backend proxy routes so keys such as <code>GOOGLE_TRANSLATE_API_KEY</code> stay server-side.</p>
+            </form>
+          </div>
+        </section>
+
+        <section class="ec-card">
+          <div class="ec-card__head">
+            <div>
+              <h2>Smart Indoor Navigation Admin</h2>
+              <p>Upload venue assets, manage unsafe zones, disable exits, and simulate A* evacuation routes with crowd-aware rerouting placeholders.</p>
+            </div>
+          </div>
+          <div class="ec-card__body">
+            <div class="ec-map-grid">
+              <aside class="ec-map-tools">
+                <div class="ec-field">
+                  <label for="ecFloorSelect">Active Floor</label>
+                  <select id="ecFloorSelect" class="ec-select">
+                    <option value="1">Floor 1</option>
+                    <option value="2" selected>Floor 2</option>
+                  </select>
+                </div>
+                <div class="ec-field">
+                  <label for="ecMapUpload">Upload Custom Map Assets</label>
+                  <input id="ecMapUpload" class="ec-file" type="file" accept=".json,.geojson,.svg,.png" />
+                  <p class="ec-map-note">GeoJSON loads directly into the map. SVG and PNG assets are catalogued for later calibrated floor-plan registration.</p>
+                </div>
+                <div class="ec-field">
+                  <label for="ecUnsafeZoneSelect">Unsafe Zone</label>
+                  <select id="ecUnsafeZoneSelect" class="ec-select">
+                    <option value="">None</option>
+                    <option value="fire-zone-f2-west">Smoke Zone - Floor 2 West</option>
+                  </select>
+                </div>
+                <div class="ec-field">
+                  <label for="ecDisabledExitSelect">Disable Exit</label>
+                  <select id="ecDisabledExitSelect" class="ec-select">
+                    <option value="">None</option>
+                    <option value="exit-a">Exit A</option>
+                    <option value="exit-b">Exit B</option>
+                  </select>
+                </div>
+                <div class="ec-field">
+                  <label for="ecCrowdModelSelect">Crowd Simulation</label>
+                  <select id="ecCrowdModelSelect" class="ec-select">
+                    <option value="normal">Normal Flow</option>
+                    <option value="crowded-exit-b">Exit B crowded</option>
+                    <option value="crowded-stair-c">Stairwell C crowded</option>
+                  </select>
+                </div>
+                <div class="ec-button-row">
+                  <button type="button" class="ec-btn ec-btn--secondary" id="ecSimulateRouteBtn">Simulate Route</button>
+                  <button type="button" class="ec-btn ec-btn--neutral" id="ecApplyMapStateBtn">Apply Map State</button>
+                  <button type="button" class="ec-btn ec-btn--ghost" id="ecResetMapBtn">Reset Map</button>
+                </div>
+                <div class="ec-route-guidance" id="ecRouteGuidance">
+                  Route guidance will appear here once the simulation runs.
+                </div>
+                <div>
+                  <h3>Uploaded Assets</h3>
+                  <div class="ec-assets-list" id="ecAssetsList">
+                    <div class="ec-asset-item">No uploaded assets yet.</div>
+                  </div>
+                </div>
+              </aside>
+              <div class="ec-map-canvas">
+                <div id="navigationAdminMap"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="ec-side-stack">
+        <section class="ec-card">
+          <div class="ec-card__head">
+            <div>
+              <h3>Active Emergency Monitor</h3>
+              <p>Live view of the current broadcast, authority context, duration, and affected zones.</p>
+            </div>
+          </div>
+          <div class="ec-card__body">
+            <div class="ec-monitor-grid">
+              <article class="ec-monitor-card">
+                <h4>Current Alert</h4>
+                <p id="ecMonitorCurrent">No active emergency.</p>
+              </article>
+              <article class="ec-monitor-card">
+                <h4>Triggered By</h4>
+                <p id="ecMonitorActor">Awaiting authorized staff action.</p>
+              </article>
+              <article class="ec-monitor-card">
+                <h4>Duration</h4>
+                <p id="ecMonitorDuration">-</p>
+              </article>
+              <article class="ec-monitor-card">
+                <h4>Affected Zones</h4>
+                <p id="ecMonitorZones">-</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="ec-card">
+          <div class="ec-card__head">
+            <div>
+              <h3>Multilingual Preview</h3>
+              <p>Instantly preview translated emergency broadcasts before sending them live.</p>
+            </div>
+            <div class="ec-language-switch">
+              <label for="ecPreviewLanguage">Preview</label>
+              <select id="ecPreviewLanguage" class="ec-select">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="ar">Arabic</option>
+                <option value="zh-CN">Chinese</option>
+                <option value="fr">French</option>
+              </select>
+            </div>
+          </div>
+          <div class="ec-card__body">
+            <div class="ec-language-preview" id="ecLanguagePreview">Translation preview loading...</div>
+            <div class="ec-translation-list" id="ecTranslationList"></div>
+          </div>
+        </section>
+
+        <section class="ec-card">
+          <div class="ec-card__head">
+            <div>
+              <h3>Channel Adapter Hooks</h3>
+              <p>Provider-agnostic placeholders for SMS, WhatsApp, push, voice, and email delivery.</p>
+            </div>
+          </div>
+          <div class="ec-card__body">
+            <div class="ec-channel-list" id="ecChannelList"></div>
+          </div>
+        </section>
+
+        <section class="ec-card">
+          <div class="ec-card__head">
+            <div>
+              <h3>Route Steps</h3>
+              <p>Demo two-floor hotel route guidance generated by the indoor navigation module.</p>
+            </div>
+          </div>
+          <div class="ec-card__body">
+            <div class="ec-route-list" id="ecRouteSteps">
+              <div class="ec-route-item">Run a simulation to generate route steps.</div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/db.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/multilingualCommunication.js"></script>
+  <script src="../js/smartIndoorNavigation.js"></script>
+  <script src="../js/emergencyService.js"></script>
+  <script src="../js/emergencyOverlay.js"></script>
+  <script src="../js/adapters/smsAdapter.js"></script>
+  <script src="../js/adapters/whatsappAdapter.js"></script>
+  <script src="../js/adapters/voiceAdapter.js"></script>
+  <script src="../js/adapters/pushAdapter.js"></script>
+  <script src="../js/adapters/emailAdapter.js"></script>
+  <script src="../js/emergencyControl.js"></script>
+</body>
+</html>

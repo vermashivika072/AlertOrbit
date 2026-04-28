@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+firebase-admin
+google-genai
+pydantic
+httpx
+sqlalchemy
+psycopg2-binary
+alembic

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Emergency SOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <div class="logo" aria-label="SOS Emergency">
+ <img class="logo-image" src="media/AlertOrbit.png" alt="AlertOrbit" />
+      <span class="logo-text">Alert<strong>Orbit</strong></span>
+    </div>
+    <nav class="header-nav" aria-label="Site navigation">
+      <a href="#" class="location-badge" id="locationBadge" aria-live="polite">
+        <span class="loc-dot" id="locDot"></span>
+        <span id="locLabel">Locating…</span>
+      </a>
+      <a href="staff-login.html" class="btn-staff-login" aria-label="Staff login portal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Staff Login
+      </a>
+    </nav>
+  </div>
+</header>
+
+
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main class="main-content" id="mainContent" role="main">
+
+  <!-- Hero zone -->
+  <section class="hero-zone" aria-label="Emergency SOS trigger">
+    <p class="hero-label" aria-hidden="true">EMERGENCY RESPONSE SYSTEM</p>
+    <h1 class="hero-title">One tap.<br>Help is coming.</h1>
+
+    <!-- SOS Button wrapper -->
+    <div class="sos-wrap" id="sosWrap">
+      <div class="sos-ring sos-ring--3" aria-hidden="true"></div>
+      <div class="sos-ring sos-ring--2" aria-hidden="true"></div>
+      <div class="sos-ring sos-ring--1" aria-hidden="true"></div>
+      <button
+        class="sos-btn"
+        id="sosBtn"
+        aria-label="Press to send emergency SOS alert"
+        aria-describedby="sosHint"
+      >
+        <span class="sos-btn__label">SOS</span>
+        <span class="sos-btn__sub">PRESS &amp; HOLD</span>
+      </button>
+    </div>
+
+    <p class="sos-hint" id="sosHint">Triggers voice alert + location share + emergency dispatch</p>
+  </section>
+
+ 
+  
+</main>
+
+<!-- ═══════════════════════ COUNTDOWN OVERLAY ═══════════════════════ -->
+<div class="overlay" id="countdownOverlay" role="dialog" aria-modal="true" aria-label="SOS countdown" hidden>
+  <div class="overlay-inner">
+    <p class="ov-eyebrow">SENDING EMERGENCY ALERT IN</p>
+    <div class="countdown-ring" aria-hidden="true">
+      <svg class="cr-svg" viewBox="0 0 160 160">
+        <circle class="cr-track" cx="80" cy="80" r="70"/>
+        <circle class="cr-fill" id="crFill" cx="80" cy="80" r="70"/>
+      </svg>
+      <span class="cr-number" id="crNumber">5</span>
+    </div>
+    <p class="ov-desc" id="ovDesc">Sharing location &amp; alerting services…</p>
+    <button class="btn-abort" id="abortBtn" aria-label="Abort SOS countdown">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      ABORT
+    </button>
+    <p class="ov-abort-hint">Tap ABORT to cancel this alert</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════ VOICE OVERLAY ═══════════════════════ -->
+<div class="overlay overlay--voice" id="voiceOverlay" role="dialog" aria-modal="true" aria-label="Voice recognition active" hidden>
+  <div class="overlay-inner">
+    <p class="ov-eyebrow">VOICE RECOGNITION ACTIVE</p>
+    <h2 class="ov-title">Speak now…</h2>
+    <p class="ov-subtitle">Say the emergency type (e.g. "Fire", "Medical", "Crime")</p>
+
+    <!-- Waveform -->
+    <div class="waveform" id="waveform" aria-hidden="true">
+      <canvas id="waveCanvas" width="320" height="80"></canvas>
+    </div>
+
+    <!-- Transcript -->
+    <div class="transcript-box" id="transcriptBox" aria-live="polite">
+      <span class="transcript-text" id="transcriptText">Listening…</span>
+    </div>
+
+    <!-- Detected type -->
+    <div class="detected-type" id="detectedType" hidden>
+      <span class="dt-label">DETECTED EMERGENCY</span>
+      <span class="dt-value" id="dtValue">—</span>
+      <span class="dt-agency" id="dtAgency"></span>
+    </div>
+
+    <div class="voice-actions">
+      <button class="btn-skip-voice" id="skipVoiceBtn">Skip / Continue without voice</button>
+    </div>
+
+<!-- ═══════════════════════ Room number  ═══════════════════════ -->
+
+  <div class="input-group">
+  <label for="room-input">Room Number</label>
+ <br>
+  <input type="text" id="room-input" placeholder="Room number" class="custom-textbox">
+</div>
+
+
+
+<!-- ═══════════════════════ whats the problem!!  ═══════════════════════ -->
+
+  <div class="input-group">
+  <label for="problem-input">Whats the problem?</label>
+  <br>
+  <input type="text" id="problem-input" placeholder="problem" class="custom-textbox">
+  </div>
+
+
+
+<!-- ═══════════════════════ ACTIVE SOS OVERLAY ═══════════════════════ -->
+<div class="overlay overlay--active" id="activeOverlay" role="dialog" aria-modal="true" aria-label="SOS Alert active" hidden>
+  <div class="overlay-inner">
+    <div class="active-pulse" aria-hidden="true"></div>
+    <p class="ov-eyebrow ov-eyebrow--white">ALERT DISPATCHED</p>
+    <h2 class="ov-title ov-title--white">Help is on the way</h2>
+    <p class="ov-subtitle ov-subtitle--dim" id="activeLocation">Sharing your location…</p>
+
+    <div class="active-info-grid" id="activeInfoGrid">
+      <div class="ai-card">
+        <span class="ai-card__label">TYPE</span>
+        <span class="ai-card__val" id="activeType">—</span>
+      </div>
+      <div class="ai-card">
+        <span class="ai-card__label">AGENCY</span>
+        <span class="ai-card__val" id="activeAgency">Dispatching</span>
+      </div>
+      <div class="ai-card">
+        <span class="ai-card__label">ALERT ID</span>
+        <span class="ai-card__val" id="activeId">—</span>
+      </div>
+      <div class="ai-card">
+        <span class="ai-card__label">TIME</span>
+        <span class="ai-card__val" id="activeTime">—</span>
+      </div>
+    </div>
+
+    <div class="active-notified" id="activeNotified">
+      <div class="an-row"><div class="an-dot an-dot--green"></div><span>Staff notified</span></div>
+      <div class="an-row"><div class="an-dot an-dot--green"></div><span>Location shared</span></div>
+      <div class="an-row an-row--pending" id="anVoice"><div class="an-dot an-dot--amber"></div><span>Voice log saved</span></div>
+    </div>
+
+    <button class="btn-resolve" id="resolveBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Resolved
+    </button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ QUICK CALL TOAST ═══════════════════════ -->
+<div class="toast" id="toastMsg" role="status" aria-live="polite" hidden></div>
+
+<footer class="site-footer">
+  <span>CrisisAlert v2.0 &nbsp;•&nbsp; All rights reserved</span>
+
+<!--  <a href="staff-login.html">Staff Portal</a>-->
+  
+</footer>
+
+<script src="js/config.js?v=20260428-roomfix"></script>
+<script src="js/db.js?v=20260428-roomfix"></script>
+<script src="js/location.js?v=20260428-roomfix"></script>
+<script src="js/voice.js?v=20260428-roomfix"></script>
+<script src="js/sos.js?v=20260428-roomfix"></script>
+<script src="js/main.js?v=20260428-roomfix"></script>
+
+</body>
+</html>
