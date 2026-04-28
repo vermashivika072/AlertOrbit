@@ -8,45 +8,46 @@
 
 ---
 
-## 📌 Overview
-Hospitality venues face unpredictable emergencies where communication is often siloed. **RCR** is a robust, full-stack solution designed to bridge the gap between guests, staff, and responders. By integrating **Real-time Node.js backend** with **Python-driven analytics**, we eliminate fragmented communication and accelerate life-saving actions.
+## 📌 Project Overview
+Hospitality venues face unpredictable emergencies where critical information is often siloed. **RCR** is a robust, full-stack solution designed to bridge the gap between guests, staff, and responders. By integrating a **Real-time Node.js backend** with **Python-driven analytics**, we eliminate fragmented communication and accelerate life-saving actions.
 
 ---
 
-## 📊 Data Visualization & Analytics
-Analytics engine (Python-based) raw emergency data ko actionable insights mein convert karta hai:
+## 💎 Project DNA: The Core Engine
+Humne 3 powerhouse technologies ko merge kiya hai ek seamless ecosystem banane ke liye:
+
+| 🚀 Speed | 📊 Analytics | 🎨 Aesthetic |
+| :--- | :--- | :--- |
+| **Real-time Sync** via Node.js for zero-latency emergency triggers. | **Python-Powered** data crunching to identify crisis patterns instantly. | **Next.js UI** wrapped in a professional Black & Purple theme. |
+
+---
+
+## 📊 Visual Intelligence
+Analytics engine raw data ko actionable insights mein convert karta hai. Ye visualizations management ko faster decision-making mein help karte hain:
 
 | **Crisis Distribution** | **Response Latency Trends** |
 |---|---|
 | ![Severity](severity_distribution.png) | ![Latency](response_latency.png) |
 | *Categorizing emergencies for resource allocation.* | *Tracking time-to-resolution performance.* |
 
-> **Tech Note:** Analysis is performed via Python (Pandas/Seaborn) and served to the Next.js frontend through a secure API layer.
+> **Note:** Graphs are generated using **Matplotlib** and **Seaborn** with a focus on dark-mode visibility.
 
 ---
 
-## 🛠️ Full-Stack Architecture
+## 🛠️ Technical Architecture
 
-### **Frontend (Next.js)**
-* **User Interface:** Aesthetic Black & Purple theme for low visual fatigue.
-* **Real-time Updates:** Client-side hydration for instant SOS alerts.
-* **Responsiveness:** Fully optimized for mobile (guests) and desktop (command center).
+### 🔄 System Workflow
+GitHub par ye diagram aapke polyglot architecture ko seamlessly represent karega:
 
-### **Backend (Node.js & Express)**
-* **Core Logic:** Managing user sessions and crisis reporting flow.
-* **Orchestration:** Serving as the bridge between the frontend and the Python analytics microservice.
-* **Security:** Ensuring distressed data is handled with high reliability.
-
-### **Analytics Engine (Python)**
-* **Intelligence:** Processing historical logs using **Pandas** and **NumPy**.
-* **Visualization:** Generating high-fidelity trend charts using **Matplotlib** and **Seaborn**.
-
----
-
-## 🚀 Setup & Execution
-
-### 1. Backend (Node.js)
-```bash
-cd backend
-npm install
-npm start
+```mermaid
+graph LR
+    User([Guest SOS Signal]) -->|Real-time| Node[Node.js Backend]
+    Node -->|Data Logging| DB[(Secure DB)]
+    Node -->|Compute| Python{Python Engine}
+    Python -->|Visual Insights| Next[Next.js Dashboard]
+    Next -->|Action| Resp[Emergency Responders]
+    
+    style User fill:#E0B0FF,stroke:#800080
+    style Next fill:#800080,stroke:#E0B0FF,color:#fff
+    style Python fill:#3776AB,color:#fff
+    style Node fill:#339933,color:#fff
